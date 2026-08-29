@@ -23,6 +23,11 @@ docs/insta/原始包/
 panthera-ht-sdk/Panthera_digital_twin-main/backend/logs/
 panthera-ht-sdk/Panthera_digital_twin-main/backend/tasks/__pycache__/
 
+# 多模态感知：交付包原件与运行时产物（源码已解压入库）
+多模态感知实现.zip
+multimodal-perception/command.json
+multimodal-perception/period_remind_state.json
+
 # ── 编辑器与系统文件 ──────────────────────────────
 .vscode/
 .idea/

@@ -8,6 +8,7 @@
 - **数字孪生 Web 前端**：3D 实时预览、关节/笛卡尔控制、示教录制、任务管理、视觉测试面板
 - **视觉引导抓取链路**：Windows 取帧服务 → HTTP 送帧 → WSL 检测判定 → 触发回放，机械臂侧零新增代码
 - **视觉偏移补偿（V2，离线验证通过）**：像素映射标定 + 阻尼最小二乘数值 IK，把轨迹抓取段平移到物体实际位置；段识别、限幅、超差拒绝等安全机制齐全（真机标定未完成，见"已知问题"）
+- **多模态感知交互（队友协作模块）**：MediaPipe 姿态识别 + 豆包语音识别 + 火山方舟对话 + 语音播报，识别"捂肚子/摔倒/求助语音"等事件，输出取物意图（详见 `multimodal-perception/`）
 - **全流程安全设计**：默认 dry-run、触发速度限幅、关节修正限幅、动作白名单、超差拒绝执行
 
 ## 硬件与软件架构
@@ -34,9 +35,10 @@
 │   ├── Panthera_digital_twin-main/  #   数字孪生：后端 app.py + 前端 + URDF
 │   ├── panthera_python/             #   Python SDK、示例脚本、电机 wheel（真机控制依赖）
 │   └── sdk-source/                  #   官方 SDK 源码
-├── robot-app/                       # 本项目业务代码
-│   ├── vision_grasp/                #   视觉抓取：取帧服务、桥接、检测、触发、标定、轨迹精炼
+├── robot-app/                       # 本项目业务代码（视觉抓取）
+│   ├── vision_grasp/                #   取帧服务、桥接、检测、触发、标定、轨迹精炼
 │   └── data/                        #   精炼后的抓取轨迹（回放用）
+├── multimodal-perception/           # 多模态感知交互系统（姿态识别+语音+LLM+TTS，API Key 已脱敏）
 ├── docs/                            # 项目文档：PRD、X4 集成方案、执行计划、知识库
 └── scripts/                         # 启动与工具脚本（后端启动、相机绑定、SDK 检查）
 ```
@@ -73,6 +75,6 @@ wsl -d Ubuntu-24.04 -- bash scripts/start-twin-backend.sh
 
 ## 许可证
 
-- 本项目业务代码（`robot-app/`、`scripts/`、`docs/`）：MIT
+- 本项目业务代码（`robot-app/`、`multimodal-perception/`、`scripts/`、`docs/`）：MIT
 - `panthera-ht-sdk/`：HighTorque Robotics 官方 SDK 与数字孪生，遵循其自带 [MIT License](panthera-ht-sdk/LICENSE)
 - Insta360 Camera SDK 为第三方版权文件，**未收录于本仓库**，请自行从 [Insta360 官网](https://www.insta360.com) 下载对应版本放入 `docs/insta/sdk/`

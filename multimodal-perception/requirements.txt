@@ -1,0 +1,14 @@
+# 独居女性照料 · 感知交互系统 —— Python 依赖（Python 3.10）
+# 安装：pip install -r requirements.txt
+# 说明：openai-whisper 会自动拉取 torch(CPU)、tiktoken、numba 等；
+#       首次运行会联网下载 whisper 模型；edge-tts 首次调用需联网访问微软语音。
+
+opencv-python>=4.8.0
+mediapipe>=0.10.0
+numpy>=1.24
+sounddevice>=0.4.6
+openai-whisper>=20231117
+pyttsx3>=2.90
+Pillow>=9.0
+requests>=2.31
+edge-tts>=6.1.0
