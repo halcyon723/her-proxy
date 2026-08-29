@@ -1,0 +1,34 @@
+# ── Python 环境与缓存 ──────────────────────────────
+.venv/
+.venv-linux/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Miniconda 安装器与 conda 环境（约 1.8GB，环境搭建见 README）
+panthera-ht-sdk/panthera_python/Miniconda3-*.sh
+panthera-ht-sdk/panthera_python/yes/
+
+# ── 前端依赖与构建产物 ─────────────────────────────
+panthera-ht-sdk/Panthera_digital_twin-main/frontend/node_modules/
+panthera-ht-sdk/Panthera_digital_twin-main/frontend/dist/
+
+# ── 第三方相机 SDK（Insta360 官方版权文件，请从官网自行下载）──
+docs/insta/sdk/
+docs/insta/原始包/
+
+# ── 日志、运行时临时文件 ───────────────────────────
+*.log
+panthera-ht-sdk/Panthera_digital_twin-main/backend/logs/
+panthera-ht-sdk/Panthera_digital_twin-main/backend/tasks/__pycache__/
+
+# ── 编辑器与系统文件 ──────────────────────────────
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+
+# ── 本地实验临时脚本（下划线开头约定）──────────────
+scripts/_*.sh
+robot-app/vision_grasp/_smoke_*.py

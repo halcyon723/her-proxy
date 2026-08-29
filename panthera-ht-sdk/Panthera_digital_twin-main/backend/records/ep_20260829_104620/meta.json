@@ -1,0 +1,24 @@
+{
+  "name": "ep_20260829_104620",
+  "label": "fail",
+  "source": "digital_twin_backend",
+  "demo_mode": false,
+  "recorded_at": "2026-08-29 10:47:19",
+  "frames": 1738,
+  "duration_s": 58.44,
+  "avg_rate_hz": 29.7,
+  "joint_travel_rad": [
+    0.775,
+    1.871,
+    0.706,
+    0.87,
+    0.226,
+    0.172
+  ],
+  "gripper_range": [
+    0.0,
+    2.0
+  ],
+  "fail_reason": "网页事后修正",
+  "label_updated_at": "2026-08-29 10:58:06"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "ep_20260829_105943",
+  "label": "success",
+  "source": "digital_twin_backend",
+  "demo_mode": false,
+  "recorded_at": "2026-08-29 11:00:50",
+  "frames": 1970,
+  "duration_s": 66.26,
+  "avg_rate_hz": 29.7,
+  "joint_travel_rad": [
+    0.816,
+    1.819,
+    0.678,
+    0.795,
+    0.069,
+    0.05
+  ],
+  "gripper_range": [
+    0.0,
+    1.291
+  ]
+}

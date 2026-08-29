@@ -1,0 +1,83 @@
+# 视觉抓取统一配置（robot-app/vision_grasp/config.yaml）
+# 单位：长度 m、角度 rad、时间 s。
+# 本文件中的安全上限会被脚本强制生效：速度限幅、力矩限幅、桌面安全区检查均按此执行。
+
+robot:
+  # 真机用 Follower.yaml；纯仿真验证逻辑时可改用数字孪生 demo
+  config_path: ../../panthera-ht-sdk/panthera_python/robot_param/Follower.yaml
+  vel_travel: 0.5        # 常规搬运段关节速度上限（rad/s），文档要求 ≤ 0.5
+  vel_approach: 0.3      # 观察/接近/下降段关节速度上限（rad/s）
+  torque_ratio: 0.3      # max_tqu = 关节力矩上限 × 该比例（文档建议 30%~50%，取保守值）
+  joint_torque_limits: [21.0, 36.0, 36.0, 21.0, 10.0, 10.0]   # 知识库 HW-001
+  drag_torque_limits: [15.0, 30.0, 30.0, 15.0, 5.0, 5.0]      # 拖动示教时重力补偿力矩限幅
+  joint_lower: [-2.4, -0.1, -0.1, -1.6, -1.7, -2.5]           # 知识库 HW-001 关节限位
+  joint_upper: [2.4, 3.2, 4.0, 1.6, 1.7, 2.5]
+  wait_tolerance: 0.02   # 到位判定容差（rad）
+  wait_timeout: 20.0     # 到位等待超时（s）
+
+camera:
+  source: mock           # x4_sdk | v4l2 | mock
+                         #   x4_sdk: Insta360 X4 官方 SDK（X4SdkCamera 预留接口，待接入）
+                         #   v4l2:   usbipd 进 WSL 后 OpenCV 直读 /dev/videoN
+                         #   mock:   从 mock_frames/ 目录轮播 jpg，无相机也可跑通全流程逻辑
+  v4l2_index: 0
+  width: 2880            # X4 全景档 2880x1440（以 Phase 0 实际固定档位为准，改后须重标定）
+  height: 1440
+  settle_time: 0.2       # 停稳后额外消振等待再取帧（s），规避运动模糊
+  warmup_frames: 10      # 打开相机后丢弃的前若干帧（自动曝光稳定）
+  mock_dir: mock_frames  # 相对本配置文件目录
+
+perception:
+  backend: mock          # http | mock（http = 集成文档 Phase 1 约定的多模态模型服务）
+  url: http://localhost:8100/predict
+  prompt: "找出画面中桌面上所有可抓取的小物体，返回包围框"
+  min_score: 0.6
+  timeout: 8.0           # HTTP 超时（s）
+
+calibration:
+  # Phase 3 / Phase 4 的产出文件，几何抓取模式必需；策略模式不需要
+  intrinsic: calibration/calib_x4.yaml    # {model, K, D, image_size, ...}
+  handeye: calibration/handeye_x4.yaml    # {T_cam2gripper: 4x4, num_poses, residual}
+
+table:
+  plane_point: [0.35, 0.0, 0.02]    # 桌面平面上一点（基座系，m），上线前实测填写
+  plane_normal: [0.0, 0.0, 1.0]     # 桌面法向（向上）
+  safe_box:                         # 抓取目标点必须落在该包围盒内，越界直接中止；
+                                    # 由 reachability_scan.py 扫描收敛（俯仰≥15° 可达域内缩 3cm，
+                                    # 扫描范围 x[0.15,0.60] y[-0.30,0.30] 全部位置可达）
+    x: [0.18, 0.57]
+    y: [-0.27, 0.27]
+    z: [0.00, 0.40]
+
+grasp:
+  observe_cartesian:                # 观察位（笛卡尔，IK 求解，须保证目标在视野内）
+    position: [0.30, 0.0, 0.30]
+    rotation: [[0.0, 0.0, 1.0], [0.0, 1.0, 0.0], [-1.0, 0.0, 0.0]]
+  grasp_rotation: [[1.0, 0.0, 0.0], [0.0, -1.0, 0.0], [0.0, 0.0, -1.0]]  # 末端 z 轴朝下（占位）
+                                    # ⚠ 可达性扫描结论：本臂最大向下俯仰约 47°，无法竖直抓取，
+                                    # 彩排阶段将改为"前倾下压"姿态（俯仰 15°~30°）后再定稿
+  pregrasp_height: 0.05             # 预抓取位：目标点正上方高度（m）
+  touch_offset: 0.005               # 下降终点高于平面交点的余量（m），避免直接怼桌面
+  lift_height: 0.12                 # 抓起后抬升高度（m）
+  descend_duration: 2.0             # moveL 垂直下降用时（s）
+  gripper_open: 1.6
+  gripper_close: 0.0
+
+record:                             # collect_grasp_data.py 用
+  output_dir: ../data/grasp_demos   # 相对本配置文件目录（即 robot-app/data/grasp_demos）
+  rate_hz: 20                       # 状态采样频率（Hz）
+  frame_width: 640                  # 存盘图像宽度（等比缩放），控制磁盘与训练开销
+
+train:                              # train_grasp_policy.py 用
+  checkpoint_dir: checkpoints       # 相对本配置文件目录
+  image_size: 128                   # 策略网络输入图像边长
+  horizon: 5                        # 动作前瞻帧数（rate_hz 下 horizon/rate 秒）
+  max_delta: 0.08                   # 单步关节角增量上限（rad），训练目标与执行时均裁剪
+  epochs: 60
+  batch_size: 32
+  lr: 0.0003
+
+policy:                             # run_grasp.py --mode policy 用
+  rate_hz: 10                       # 策略闭环执行频率（Hz）
+  max_steps: 200                    # 单次抓取最长闭环步数，超限停止
+  stop_height: 0.01                 # 末端 z 低于「桌面平面 + 该值」时结束接近段（m）
