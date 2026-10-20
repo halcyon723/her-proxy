@@ -78,3 +78,35 @@ wsl -d Ubuntu-24.04 -- bash scripts/start-twin-backend.sh
 - 本项目业务代码（`robot-app/`、`multimodal-perception/`、`scripts/`、`docs/`）：MIT
 - `panthera-ht-sdk/`：HighTorque Robotics 官方 SDK 与数字孪生，遵循其自带 [MIT License](panthera-ht-sdk/LICENSE)
 - Insta360 Camera SDK 为第三方版权文件，**未收录于本仓库**，请自行从 [Insta360 官网](https://www.insta360.com) 下载对应版本放入 `docs/insta/sdk/`
+
+
+## 团队分工与个人贡献
+
+HER_PROXY 是由两名成员在黑客松的一天一夜内共同完成的机器人原型，探索多模态感知、语言交互与机械臂执行在独居女性照护场景中的结合。
+
+本仓库由团队原始仓库 Fork 而来，保留项目来源与提交历史，并补充个人负责模块的说明。
+
+### halcyon723 — 多模态感知与交互
+
+我主要负责项目的多模态感知与交互部分，基于 **Python、OpenCV 和 Flask** 构建数字孪生软件栈，整合 **姿态感知、语音、LLM 与 TTS**。
+
+| 模块 | 我的工作 |
+| --- | --- |
+| 视觉与姿态感知 | 基于 OpenCV 处理视觉输入，提供姿态相关的感知信息 |
+| 语音交互 | 集成语音输入，支持用户通过语音表达需求 |
+| 大语言模型交互 | 接入 LLM，支持自然语言理解与对话回复 |
+| 语音合成 | 接入 TTS，将文本回复转换为语音反馈 |
+| 数字孪生与软件集成 | 基于 Python / OpenCV / Flask 整合感知和交互模块 |
+
+我的工作重点是将视觉与语言相关能力整合到机器人原型中，支持其感知场景、接收用户表达并提供对话反馈。
+
+
+### 项目阶段
+
+本项目为黑客松期间完成的概念验证原型。仓库中的实现与现场演示体现当前完成范围；更丰富的照护场景、长期记忆与持续陪伴能力属于后续探索方向。
+
+### 项目链接
+
+- [团队原始仓库](https://github.com/214notfound/her-proxy)
+- [halcyon723 的仓库](https://github.com/halcyon723/her-proxy)
+- [项目演示视频](https://www.bilibili.com/video/BV1HX4U6LE12/)
